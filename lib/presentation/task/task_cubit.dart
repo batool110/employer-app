@@ -60,7 +60,7 @@ class TaskCubit extends Cubit<List<TaskModel>> {
       id: task.id,
       title: title,
       description: description,
-      pictureUrl: task.pictureUrl, // Will be replaced if imageFile is updated
+      pictureUrl: task.pictureUrl,
       assigneeId: task.assigneeId,
       status: status,
       reward: reward,

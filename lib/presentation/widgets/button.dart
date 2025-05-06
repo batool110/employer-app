@@ -37,3 +37,25 @@ class PrimartTextButton extends StatelessWidget {
     );
   }
 }
+
+class AppIconButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onPressed;
+  final Icon icon;
+
+  const AppIconButton(
+      {super.key,
+      required this.label,
+      required this.onPressed,
+      required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+      onPressed: onPressed,
+      label: Text(label),
+      icon: icon,
+    );
+  }
+}
