@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/firebase/firebase_auth_service.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,9 +7,25 @@ class AuthCubit extends Cubit<bool> {
 
   AuthCubit() : super(false);
 
-  void login(String email, String password) async {
-    final user = await _authService.signIn(email, password);
-    if (user != null) emit(true);
+  Future<void> login({
+    required String email,
+    required String password,
+    required Function(String uid, String role) onSuccess,
+    required Function(String) onError,
+  }) async {
+    try {
+      final user = await _authService.signIn(email, password);
+      if (user != null) {
+        final uid = user.uid;
+        final role = await _authService.getUserRole(uid);
+        emit(true);
+        onSuccess(uid, role);
+      } else {
+        onError('Login failed');
+      }
+    } catch (e) {
+      onError(e.toString());
+    }
   }
 
   void logout() async {
@@ -27,11 +42,11 @@ class AuthCubit extends Cubit<bool> {
     required String role,
     String? referredBy,
     XFile? picture,
-    required VoidCallback onSuccess,
+    required Function(String uid) onSuccess,
     required Function(String) onError,
   }) async {
     try {
-      await _authService.registerUser(
+      final uid = await _authService.registerUser(
         name: name,
         email: email,
         password: password,
@@ -41,7 +56,7 @@ class AuthCubit extends Cubit<bool> {
         referredBy: referredBy,
         picture: picture,
       );
-      onSuccess();
+      onSuccess(uid);
     } catch (e) {
       onError(e.toString());
     }

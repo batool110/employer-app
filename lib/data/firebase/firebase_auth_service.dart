@@ -10,7 +10,7 @@ class FirebaseAuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  Future<void> registerUser({
+  Future<String> registerUser({
     required String name,
     required String email,
     required String password,
@@ -54,6 +54,12 @@ class FirebaseAuthService {
       'pictureUrl': pictureUrl,
       'createdAt': FieldValue.serverTimestamp(),
     });
+    return uid;
+  }
+
+  Future<String> getUserRole(String uid) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+    return doc.data()?['role'] ?? 'Employee';
   }
 
   Future<List<String>> fetchAllUserNames() async {

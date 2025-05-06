@@ -42,7 +42,20 @@ class FirebaseTaskService {
     await _storage.ref().child('task_images').child('$taskId.jpg').delete();
   }
 
-  Future<void> updateTask(TaskModel task) async {
-    await _firestore.collection('tasks').doc(task.id).update(task.toMap());
+  Future<void> updateTask(TaskModel task, [File? imageFile]) async {
+    String imageUrl = task.pictureUrl;
+
+    if (imageFile != null) {
+      final ref = _storage.ref().child('task_images').child('${task.id}.jpg');
+      await ref.putFile(imageFile);
+      imageUrl = await ref.getDownloadURL();
+    }
+
+    final updatedTask = task.copyWith(pictureUrl: imageUrl);
+
+    await _firestore
+        .collection('tasks')
+        .doc(task.id)
+        .update(updatedTask.toMap());
   }
 }

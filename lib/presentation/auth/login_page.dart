@@ -30,9 +30,22 @@ class LoginPage extends StatelessWidget {
             PrimaryButton(
               label: 'Login',
               onPressed: () {
-                context
-                    .read<AuthCubit>()
-                    .login(emailController.text, passwordController.text);
+                context.read<AuthCubit>().login(
+                      email: emailController.text.trim(),
+                      password: passwordController.text.trim(),
+                      onSuccess: (uid, role) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => TaskPage(role: role, uid: uid)),
+                        );
+                      },
+                      onError: (errorMessage) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(errorMessage)),
+                        );
+                      },
+                    );
               },
             ),
             Padding(
@@ -54,17 +67,6 @@ class LoginPage extends StatelessWidget {
                       })
                 ],
               ),
-            ),
-            BlocBuilder<AuthCubit, bool>(
-              builder: (context, loggedIn) {
-                if (loggedIn) {
-                  Future.microtask(() => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const TaskPage()),
-                      ));
-                }
-                return Container();
-              },
             ),
           ],
         ),

@@ -61,8 +61,10 @@ class RegisterPageState extends State<RegisterPage> {
             role: role,
             referredBy: referredBy == 'None' ? null : referredBy,
             picture: picture,
-            onSuccess: () => Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => const TaskPage())),
+            onSuccess: (uid) => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => TaskPage(role: role, uid: uid)),
+            ),
             onError: (message) => ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(message)),
             ),
