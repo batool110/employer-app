@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:employer_test/data/firebase/firebase_notification_service.dart';
 import 'package:employer_test/domain/models/task_model.dart';
+import 'package:employer_test/presentation/auth/auth_cubit.dart';
+import 'package:employer_test/presentation/auth/login_page.dart';
 import 'package:employer_test/presentation/task/task_cubit.dart';
 import 'package:employer_test/presentation/widgets/button.dart';
 import 'package:employer_test/presentation/widgets/theme/colors.dart';
@@ -36,7 +38,21 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tasks')),
+      appBar: AppBar(title: const Text('Tasks'), actions: [
+        IconButton(
+            onPressed: () {
+              context.read<AuthCubit>().logout();
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => LoginPage(),
+                  ));
+            },
+            icon: const Icon(
+              Icons.logout_sharp,
+              color: Colors.white,
+            ))
+      ]),
       body: BlocBuilder<TaskCubit, List<TaskModel>>(
         builder: (context, tasks) {
           if (tasks.isEmpty) {
