@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:employer_test/data/firebase/firebase_notification_service.dart';
 import 'package:employer_test/domain/models/task_model.dart';
 import 'package:employer_test/presentation/task/task_cubit.dart';
 import 'package:employer_test/presentation/widgets/button.dart';
@@ -26,6 +27,10 @@ class _TaskPageState extends State<TaskPage> {
   void initState() {
     super.initState();
     context.read<TaskCubit>().loadTasks(widget.uid, widget.role.toLowerCase());
+
+    if (widget.role.toLowerCase() == 'employee') {
+      FirebaseNotificationService().checkForTaskAssignments();
+    }
   }
 
   @override
@@ -200,6 +205,15 @@ class _TaskPageState extends State<TaskPage> {
                       reward: reward,
                       createdBy: widget.uid,
                     );
+
+                    if (!isEditing && imageFile == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            dismissDirection: DismissDirection.up,
+                            content: Text('Please pick an image for the task')),
+                      );
+                      return;
+                    }
 
                     if (isEditing) {
                       taskCubit.updateTask(newTask, imageFile);

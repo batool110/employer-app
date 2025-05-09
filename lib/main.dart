@@ -1,4 +1,5 @@
 import 'package:employer_test/data/firebase/firebase_task_service.dart';
+import 'package:employer_test/data/firebase/local_notification_service.dart';
 import 'package:employer_test/presentation/auth/auth_cubit.dart';
 import 'package:employer_test/presentation/auth/login_page.dart';
 import 'package:employer_test/presentation/task/task_cubit.dart';
@@ -10,6 +11,8 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await LocalNotificationService.init();
   runApp(const MyApp());
 }
 
