@@ -32,15 +32,13 @@ class FirebaseAuthService {
         final ref = _storage.ref().child('user_pictures/$uid.jpg');
         final uploadTask = await ref.putFile(File(picture.path));
 
-        // Ensure upload was successful before getting URL
         if (uploadTask.state == TaskState.success) {
           pictureUrl = await ref.getDownloadURL();
         } else {
           throw Exception('Upload failed: ${uploadTask.state}');
         }
       } catch (e) {
-        print('Image upload or retrieval failed: $e');
-        // Optionally: set a default picture URL or handle gracefully
+        throw Exception('Image upload or retrieval failed: $e');
       }
     }
     await _firestore.collection('users').doc(uid).set({

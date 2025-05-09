@@ -9,7 +9,6 @@ class FirebaseNotificationService {
   final _auth = FirebaseAuth.instance;
   final _taskCollection = 'tasks';
 
-  // Track already notified task IDs
   final Set<String> _seenTaskIds = {};
 
   Future<void> checkForTaskAssignments() async {
